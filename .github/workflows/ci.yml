@@ -15,8 +15,12 @@ on:
 
 jobs:
   build:
-
-    runs-on: macos-latest
+# we can specify different Operating Systems to run our job using matrix
+    # runs-on: macos-latest
+    runs-on: ${{matrix.os}}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
     - uses: actions/checkout@v2
@@ -32,7 +36,7 @@ jobs:
         
     - name: Build with Gradle
       run: ./gradlew build
-      
+
       # uses: gradle/gradle-build-action@4137be6a8bf7d7133955359dbd952c0ca73b1021
       # with:
         # arguments: build
