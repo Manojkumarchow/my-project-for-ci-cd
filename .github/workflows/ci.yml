@@ -16,11 +16,11 @@ on:
 jobs:
   build:
 # we can specify different Operating Systems to run our job using matrix
-    # runs-on: macos-latest
-    runs-on: ${{matrix.os}}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: macos-latest
+    # runs-on: ${{matrix.os}}
+    # strategy:
+      # matrix:
+        # os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
     - uses: actions/checkout@v2
@@ -43,7 +43,7 @@ jobs:
     - name: Build and Push Docker Image
       uses: mr-smithers-excellent/docker-build-push@v4
       with:
-        image: manojchow72/my-private-repo
+        image: manojchow72/my-private-repo:latest
         # tag: latest
         registry: docker.io
         username: ${{secrets.DOCKER_USERNAME}}
