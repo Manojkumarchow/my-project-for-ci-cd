@@ -9,42 +9,43 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches: [ test-branch-for-ci-cd ]
+    branches: [test-branch-for-ci-cd]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   build:
-# we can specify different Operating Systems to run our job using matrix
-    runs-on: macos-latest
+    # we can specify different Operating Systems to run our job using matrix
+    runs-on: ubuntu-latest
     # runs-on: ${{matrix.os}}
     # strategy:
-      # matrix:
-        # os: [ubuntu-latest, windows-latest, macos-latest]
+    # matrix:
+    # os: [ubuntu-latest, windows-latest, macos-latest]
 
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Set up JDK 8
-      uses: actions/setup-java@v2
-      with:
-        java-version: '8'
-        distribution: 'adopt'
+      - name: Set up JDK 8
+        uses: actions/setup-java@v2
+        with:
+          java-version: "8"
+          distribution: "adopt"
 
-    - name: Grant Executable Permissions for Gradle
-      run: chmod a+x gradlew
-        
-    - name: Build with Gradle
-      run: ./gradlew build
+      - name: Grant Executable Permissions for Gradle
+        run: chmod a+x gradlew
 
-      # uses: gradle/gradle-build-action@4137be6a8bf7d7133955359dbd952c0ca73b1021
-      # with:
-        # arguments: build
-    # - name: Build and Push Docker Image
-    #   uses: mr-smithers-excellent/docker-build-push@v4
-    #   with:
-    #     image: manojchow72/my-private-repo
-    #     # tag: latest
-    #     registry: docker.io
-    #     username: ${{secrets.DOCKER_USERNAME}}
-    #     password: ${{secrets.DOCKER_PASSWORD}}
+      - name: Build with Gradle
+        run: ./gradlew build
+
+      - name: Docker Build and Push to my Private Repo
+        id: buildAndPushImage
+        uses: risfeng/docker-image-build-push-action@v1.0
+        with:
+          registry_url: "docker.io"
+          # repository_name: "my-private-repo"
+          repository_name: "manojchow72/my-private-repo"
+          user_name: ${{secrets.DOCKER_USERNAME}}
+          password: ${{secrets.DOCKER_ACCESS_TOKEN}}
+          image_version: 'v1.0'
+      - name: Get pre step result output image_pull_url
+        run: echo "The time was ${{steps.buildAndPushImage.outputs.image_pull_url}}"
