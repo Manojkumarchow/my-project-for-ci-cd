@@ -16,7 +16,7 @@ on:
 jobs:
   build:
     # we can specify different Operating Systems to run our job using matrix
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     # runs-on: ${{matrix.os}}
     # strategy:
     # matrix:
